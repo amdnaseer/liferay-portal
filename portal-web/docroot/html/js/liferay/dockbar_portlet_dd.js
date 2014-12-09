@@ -12,17 +12,18 @@ AUI.add(
 
 		var PortletDragDrop = A.Component.create(
 			{
+				ATTRS: {ls
+
+					srcNode: {
+						setter: A.one
+					}
+				},
+
 				EXTENDS: A.Plugin.Base,
 
 				NAME: NAME,
 
 				NS: NAME,
-
-				ATTRS: {
-					srcNode: {
-						setter: A.one
-					}
-				},
 
 				prototype: {
 					initializer: function() {
@@ -54,6 +55,8 @@ AUI.add(
 
 						if (defaultLayoutOptions) {
 							portletItemOptions.on = defaultLayoutOptions.on;
+
+							portletItemOptions.delegateConfig.dragConfig.plugins = defaultLayoutOptions.delegateConfig.dragConfig.plugins; // ARENA
 						}
 
 						var portletItemClass = 'PortletItem';

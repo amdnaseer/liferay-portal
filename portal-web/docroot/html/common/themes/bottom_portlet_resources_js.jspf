@@ -17,63 +17,63 @@
 <c:if test="<%= (portlets != null) && !portlets.isEmpty() %>">
 
 	<%
-	Set<String> portletResourceStaticURLs = (Set<String>)request.getAttribute(WebKeys.PORTLET_RESOURCE_STATIC_URLS);
+		Set<String> portletResourceStaticURLs = (Set<String>)request.getAttribute(WebKeys.PORTLET_RESOURCE_STATIC_URLS);
 
-	if (portletResourceStaticURLs == null) {
-		portletResourceStaticURLs = new LinkedHashSet<String>();
+		if (portletResourceStaticURLs == null) {
+			portletResourceStaticURLs = new LinkedHashSet<String>();
 
-		request.setAttribute(WebKeys.PORTLET_RESOURCE_STATIC_URLS, portletResourceStaticURLs);
-	}
+			request.setAttribute(WebKeys.PORTLET_RESOURCE_STATIC_URLS, portletResourceStaticURLs);
+		}
 
-	for (Portlet curPortlet : portlets) {
-		for (String footerPortalJavaScript : curPortlet.getFooterPortalJavaScript()) {
-			if (!HttpUtil.hasProtocol(footerPortalJavaScript)) {
-				Portlet curRootPortlet = curPortlet.getRootPortlet();
+		for (Portlet curPortlet : portlets) {
+			for (String footerPortalJavaScript : curPortlet.getFooterPortalJavaScript()) {
+				if (!HttpUtil.hasProtocol(footerPortalJavaScript) && !footerPortalJavaScript.startsWith("//")) { // ARENA
+					Portlet curRootPortlet = curPortlet.getRootPortlet();
 
-				footerPortalJavaScript = PortalUtil.getStaticResourceURL(request, PortalUtil.getPathContext() + footerPortalJavaScript, curRootPortlet.getTimestamp());
-			}
+					footerPortalJavaScript = PortalUtil.getStaticResourceURL(request, PortalUtil.getPathContext() + footerPortalJavaScript, curRootPortlet.getTimestamp());
+				}
 
-			if (!footerPortalJavaScript.contains(Http.PROTOCOL_DELIMITER)) {
-				String cdnBaseURL = themeDisplay.getCDNBaseURL();
+				if (!footerPortalJavaScript.contains(Http.PROTOCOL_DELIMITER) && !footerPortalJavaScript.startsWith("//")) { // ARENA
+					String cdnBaseURL = themeDisplay.getCDNBaseURL();
 
-				footerPortalJavaScript = cdnBaseURL.concat(footerPortalJavaScript);
-			}
+					footerPortalJavaScript = cdnBaseURL.concat(footerPortalJavaScript);
+				}
 
-			if (!portletResourceStaticURLs.contains(footerPortalJavaScript) && !themeDisplay.isIncludedJs(footerPortalJavaScript)) {
-				portletResourceStaticURLs.add(footerPortalJavaScript);
+				if (!portletResourceStaticURLs.contains(footerPortalJavaScript) && !themeDisplay.isIncludedJs(footerPortalJavaScript)) {
+					portletResourceStaticURLs.add(footerPortalJavaScript);
 	%>
 
-				<script src="<%= HtmlUtil.escape(footerPortalJavaScript) %>" type="text/javascript"></script>
+	<script src="<%= HtmlUtil.escape(footerPortalJavaScript) %>" type="text/javascript"></script>
 
 	<%
+				}
 			}
 		}
-	}
 
-	for (Portlet curPortlet : portlets) {
-		for (String footerPortletJavaScript : curPortlet.getFooterPortletJavaScript()) {
-			if (!HttpUtil.hasProtocol(footerPortletJavaScript)) {
-				Portlet curRootPortlet = curPortlet.getRootPortlet();
+		for (Portlet curPortlet : portlets) {
+			for (String footerPortletJavaScript : curPortlet.getFooterPortletJavaScript()) {
+				if (!HttpUtil.hasProtocol(footerPortletJavaScript) && !footerPortletJavaScript.startsWith("//")) { // ARENA
+					Portlet curRootPortlet = curPortlet.getRootPortlet();
 
-				footerPortletJavaScript = PortalUtil.getStaticResourceURL(request, curPortlet.getStaticResourcePath() + footerPortletJavaScript, curRootPortlet.getTimestamp());
-			}
+					footerPortletJavaScript = PortalUtil.getStaticResourceURL(request, curPortlet.getStaticResourcePath() + footerPortletJavaScript, curRootPortlet.getTimestamp());
+				}
 
-			if (!footerPortletJavaScript.contains(Http.PROTOCOL_DELIMITER)) {
-				String cdnBaseURL = themeDisplay.getCDNBaseURL();
+				if (!footerPortletJavaScript.contains(Http.PROTOCOL_DELIMITER) && !footerPortletJavaScript.startsWith("//")) { // ARENA
+					String cdnBaseURL = themeDisplay.getCDNBaseURL();
 
-				footerPortletJavaScript = cdnBaseURL.concat(footerPortletJavaScript);
-			}
+					footerPortletJavaScript = cdnBaseURL.concat(footerPortletJavaScript);
+				}
 
-			if (!portletResourceStaticURLs.contains(footerPortletJavaScript)) {
-				portletResourceStaticURLs.add(footerPortletJavaScript);
+				if (!portletResourceStaticURLs.contains(footerPortletJavaScript)) {
+					portletResourceStaticURLs.add(footerPortletJavaScript);
 	%>
 
-				<script src="<%= HtmlUtil.escape(footerPortletJavaScript) %>" type="text/javascript"></script>
+	<script src="<%= HtmlUtil.escape(footerPortletJavaScript) %>" type="text/javascript"></script>
 
 	<%
+				}
 			}
 		}
-	}
 	%>
 
 </c:if>
