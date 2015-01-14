@@ -136,9 +136,9 @@ public class DynamicCSSUtil {
 		}
 
 		if (themeCssFastLoad && (cacheResourceURLConnection != null) &&
-			(resourceURLConnection != null) &&
-			(cacheResourceURLConnection.getLastModified() ==
-				resourceURLConnection.getLastModified())) {
+			(resourceURLConnection != null)) { // ARENA
+			// (cacheResourceURLConnection.getLastModified() ==
+			// 	 resourceURLConnection.getLastModified())) {
 
 			parsedContent = StringUtil.read(
 				cacheResourceURLConnection.getInputStream());

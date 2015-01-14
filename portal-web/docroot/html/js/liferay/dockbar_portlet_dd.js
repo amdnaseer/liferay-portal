@@ -12,7 +12,7 @@ AUI.add(
 
 		var PortletDragDrop = A.Component.create(
 			{
-				ATTRS: {ls
+				ATTRS: {
 
 					srcNode: {
 						setter: A.one
