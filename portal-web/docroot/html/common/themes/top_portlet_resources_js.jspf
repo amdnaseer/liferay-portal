@@ -27,7 +27,7 @@
 
 	for (Portlet curPortlet : portlets) {
 		for (String headerPortalJavaScript : curPortlet.getHeaderPortalJavaScript()) {
-			if (!HttpUtil.hasProtocol(headerPortalJavaScript)) {
+			if (!HttpUtil.hasProtocol(headerPortalJavaScript) && !headerPortalJavaScript.startsWith("//")) { // ARENA
 				Portlet curRootPortlet = curPortlet.getRootPortlet();
 
 				headerPortalJavaScript = PortalUtil.getStaticResourceURL(request, PortalUtil.getPathContext() + headerPortalJavaScript, curRootPortlet.getTimestamp());
@@ -52,7 +52,7 @@
 
 	for (Portlet curPortlet : portlets) {
 		for (String headerPortletJavaScript : curPortlet.getHeaderPortletJavaScript()) {
-			if (!HttpUtil.hasProtocol(headerPortletJavaScript)) {
+			if (!HttpUtil.hasProtocol(headerPortletJavaScript) && !headerPortletJavaScript.startsWith("//")) { // ARENA
 				Portlet curRootPortlet = curPortlet.getRootPortlet();
 
 				headerPortletJavaScript = PortalUtil.getStaticResourceURL(request, curPortlet.getStaticResourcePath() + headerPortletJavaScript, curRootPortlet.getTimestamp());

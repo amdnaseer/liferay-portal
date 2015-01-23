@@ -76,6 +76,7 @@ import java.util.logging.LogRecord;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -806,6 +807,16 @@ public class LuceneHelperImplTest {
 	private class MockIndexAccessor implements IndexAccessor {
 
 		@Override
+		public void updateDocument(Term term, Document document) throws IOException {
+
+		}
+
+		@Override
+		public IndexSearcher acquireIndexSearcher() {
+			return null;
+		}
+
+		@Override
 		public void addDocument(Document document) {
 		}
 
@@ -845,6 +856,10 @@ public class LuceneHelperImplTest {
 		}
 
 		@Override
+		public void invalidate() {
+		}
+
+		@Override
 		public void loadIndex(InputStream inputStream) throws IOException {
 			UnsyncByteArrayOutputStream unsyncByteArrayOutputStream =
 				new UnsyncByteArrayOutputStream();
@@ -855,7 +870,7 @@ public class LuceneHelperImplTest {
 		}
 
 		@Override
-		public void updateDocument(Term term, Document document) {
+		public void releaseIndexSearcher(IndexSearcher indexSearcher) {
 		}
 
 		public byte[] getResponseMessage() {
