@@ -400,8 +400,7 @@ public class SpriteProcessorImpl implements SpriteProcessor {
 		}
 	}
 
-	// private static final int _NUM_OF_BANDS = 4;
-	private static final int _NUM_OF_BANDS = 5; // Arena
+	private static final int _NUM_OF_BANDS = 4;
 
 	private static Log _log = LogFactoryUtil.getLog(SpriteProcessorImpl.class);
 
