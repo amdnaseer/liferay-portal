@@ -48,7 +48,8 @@ public class SPIConfigurationTest {
 
 		SAXReaderUtil saxReaderUtil = new SAXReaderUtil();
 
-		saxReaderUtil.setSAXReader(new SAXReaderImpl());
+		// Arena
+		saxReaderUtil.setUnsecureSAXReader(new SAXReaderImpl());
 	}
 
 	@Test

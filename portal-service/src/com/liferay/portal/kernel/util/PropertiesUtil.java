@@ -196,7 +196,7 @@ public class PropertiesUtil {
 	public static Properties load(String s, String charsetName)
 		throws IOException {
 
-		if (JavaDetector.isJDK6()) {
+		if (JavaDetector.isJDK6() || JavaDetector.isJDK7()) { // Arena
 			return loadJDK6(new UnsyncStringReader(s));
 		}
 
