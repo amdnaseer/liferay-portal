@@ -33,7 +33,7 @@
 				footerPortalJavaScript = PortalUtil.getStaticResourceURL(request, PortalUtil.getPathContext() + footerPortalJavaScript, curRootPortlet.getTimestamp());
 			}
 
-			if (!footerPortalJavaScript.contains(Http.PROTOCOL_DELIMITER)) {
+			if (!footerPortalJavaScript.contains(Http.PROTOCOL_DELIMITER) && !footerPortalJavaScript.startsWith("//")) { // Arena
 				String cdnBaseURL = themeDisplay.getCDNBaseURL();
 
 				footerPortalJavaScript = cdnBaseURL.concat(footerPortalJavaScript);
@@ -58,7 +58,7 @@
 				footerPortletJavaScript = PortalUtil.getStaticResourceURL(request, curPortlet.getStaticResourcePath() + footerPortletJavaScript, curRootPortlet.getTimestamp());
 			}
 
-			if (!footerPortletJavaScript.contains(Http.PROTOCOL_DELIMITER)) {
+			if (!footerPortletJavaScript.contains(Http.PROTOCOL_DELIMITER) && !footerPortletJavaScript.startsWith("//")) { // Arena
 				String cdnBaseURL = themeDisplay.getCDNBaseURL();
 
 				footerPortletJavaScript = cdnBaseURL.concat(footerPortletJavaScript);
