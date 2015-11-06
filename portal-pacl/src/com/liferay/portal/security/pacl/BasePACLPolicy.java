@@ -165,7 +165,7 @@ public abstract class BasePACLPolicy implements PACLPolicy {
 	protected Provider getProvider() {
 		String providerName = "SUN";
 
-		if (JavaDetector.isIBM() && JavaDetector.isJDK6()) {
+		if (JavaDetector.isIBM() && (JavaDetector.isJDK6() || JavaDetector.isJDK7())) { // Arena
 			providerName = "Policy";
 		}
 

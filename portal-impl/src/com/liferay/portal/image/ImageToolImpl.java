@@ -233,7 +233,7 @@ public class ImageToolImpl implements ImageTool {
 	public void encodeGIF(RenderedImage renderedImage, OutputStream os)
 		throws IOException {
 
-		if (JavaDetector.isJDK6()) {
+		if (JavaDetector.isJDK6() || JavaDetector.isJDK7()) { // Arena
 			ImageIO.write(renderedImage, TYPE_GIF, os);
 		}
 		else {

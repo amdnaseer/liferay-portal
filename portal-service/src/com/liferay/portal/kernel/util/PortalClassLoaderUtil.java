@@ -34,7 +34,7 @@ public class PortalClassLoaderUtil {
 		PortalRuntimePermission.checkSetBeanProperty(
 			PortalClassLoaderUtil.class);
 
-		if (ServerDetector.isJOnAS() && JavaDetector.isJDK6()) {
+		if (ServerDetector.isJOnAS() && (JavaDetector.isJDK6() || JavaDetector.isJDK7())) { // Arena
 			_classLoader = new URLClassLoader(new URL[0], classLoader);
 		}
 		else {

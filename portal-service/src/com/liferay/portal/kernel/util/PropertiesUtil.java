@@ -143,7 +143,7 @@ public class PropertiesUtil {
 	public static Properties load(InputStream is, String charsetName)
 		throws IOException {
 
-		if (JavaDetector.isJDK6()) {
+		if (JavaDetector.isJDK6() || JavaDetector.isJDK7()) { // Arena
 			return loadJDK6(new InputStreamReader(is, charsetName));
 		}
 		else {

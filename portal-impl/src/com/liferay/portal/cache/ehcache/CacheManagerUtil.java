@@ -47,7 +47,7 @@ public class CacheManagerUtil {
 			// This odd logic is a workaround for
 			// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6522773
 
-			if (JavaDetector.isJDK6()) {
+			if (JavaDetector.isJDK6() || JavaDetector.isJDK7()) { // Arena
 				blockingQueue = (BlockingQueue<Runnable>)_workQueueField.get(
 					scheduledThreadPoolExecutor);;
 
@@ -66,7 +66,7 @@ public class CacheManagerUtil {
 			scheduledThreadPoolExecutor.setCorePoolSize(
 				PropsValues.EHCACHE_CACHE_MANAGER_STATISTICS_THREAD_POOL_SIZE);
 
-			if (JavaDetector.isJDK6()) {
+			if (JavaDetector.isJDK6() || JavaDetector.isJDK7()) { // Arena
 				while (
 					scheduledThreadPoolExecutor.getPoolSize() >
 						PropsValues.
@@ -90,7 +90,7 @@ public class CacheManagerUtil {
 			_statisticsExecutorField = ReflectionUtil.getDeclaredField(
 				CacheManager.class, "statisticsExecutor");
 
-			if (JavaDetector.isJDK6()) {
+			if (JavaDetector.isJDK6() || JavaDetector.isJDK7()) { // Arena
 				_workQueueField = ReflectionUtil.getDeclaredField(
 					ThreadPoolExecutor.class, "workQueue");
 			}
