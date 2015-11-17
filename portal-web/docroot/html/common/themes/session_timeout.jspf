@@ -14,13 +14,13 @@
  */
 --%>
 
-<c:if test="<%= !PropsValues.SESSION_DISABLED %>">
+<c:if test="<%= themeDisplay.isSignedIn() && !PropsValues.SESSION_DISABLED %>">     <!-- Arena -->
 
 	<%
-	String autoRememberMe = CookieKeys.getCookie(request, CookieKeys.REMEMBER_ME);
+	String autoRememberMe = CookieKeys.getCookie(request, CookieKeys.REMEMBER_ME);  // Arena
 	%>
 
-	<c:if test="<%= !themeDisplay.isSignedIn() || Validator.isNull(autoRememberMe) %>">
+	<c:if test="<%= Validator.isNull(autoRememberMe) %>">  <!-- Arena -->
 
 		<%
 		int sessionTimeout = PropsValues.SESSION_TIMEOUT;
@@ -49,7 +49,7 @@
 		<aui:script use="liferay-session">
 			Liferay.Session = new Liferay.SessionBase(
 				{
-					autoExtend: <%= !themeDisplay.isSignedIn() || PropsValues.SESSION_TIMEOUT_AUTO_EXTEND %>,
+					autoExtend: <%= PropsValues.SESSION_TIMEOUT_AUTO_EXTEND %>,
 					sessionLength: <%= sessionTimeout %>,
 					redirectOnExpire: <%= sessionRedirectOnExpire %>,
 					redirectUrl: '<%= HtmlUtil.escapeJS(sessionRedirectUrl) %>',
@@ -57,7 +57,7 @@
 				}
 			);
 
-			<c:if test="<%= themeDisplay.isSignedIn() && sessionTimeoutWarning > 0 %>">
+			<c:if test="<%= sessionTimeoutWarning > 0 %>"> <!-- Arena -->
 				Liferay.Session.plug(Liferay.SessionDisplay);
 			</c:if>
 		</aui:script>
