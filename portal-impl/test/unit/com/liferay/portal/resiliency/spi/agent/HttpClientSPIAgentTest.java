@@ -17,18 +17,17 @@ package com.liferay.portal.resiliency.spi.agent;
 import com.liferay.portal.kernel.io.BigEndianCodec;
 import com.liferay.portal.kernel.io.Serializer;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
-import com.liferay.portal.kernel.nio.intraband.Datagram;
-import com.liferay.portal.kernel.nio.intraband.MockIntraband;
-import com.liferay.portal.kernel.nio.intraband.MockRegistrationReference;
-import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
+import com.liferay.portal.kernel.nio.intraband.*;
 import com.liferay.portal.kernel.nio.intraband.mailbox.MailboxUtil;
 import com.liferay.portal.kernel.resiliency.PortalResiliencyException;
 import com.liferay.portal.kernel.resiliency.spi.MockSPI;
 import com.liferay.portal.kernel.resiliency.spi.SPI;
 import com.liferay.portal.kernel.resiliency.spi.SPIConfiguration;
 import com.liferay.portal.kernel.resiliency.spi.agent.AcceptorServlet;
+import com.liferay.portal.kernel.resiliency.spi.remote.RemoteSPI;
 import com.liferay.portal.kernel.servlet.BufferCacheServletResponse;
 import com.liferay.portal.kernel.servlet.ReadOnlyServletResponse;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.util.InetAddressUtil;
@@ -176,9 +175,10 @@ public class HttpClientSPIAgentTest {
 		socket.close();
 
 		// Clean up when input is shutdown, failed without log
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			HttpClientSPIAgent.class.getName(), Level.OFF);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						HttpClientSPIAgent.class.getName(), Level.OFF);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		socket = new Socket(
 			InetAddressUtil.getLoopbackInetAddress(),
@@ -203,9 +203,10 @@ public class HttpClientSPIAgentTest {
 		Assert.assertTrue(logRecords.isEmpty());
 
 		// Clean up when input is shutdown, failed with log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			HttpClientSPIAgent.class.getName(), Level.WARNING);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						HttpClientSPIAgent.class.getName(), Level.WARNING);
+		logRecords = captureHandler.getLogRecords();
 
 		socket = new Socket(
 			InetAddressUtil.getLoopbackInetAddress(),
@@ -376,9 +377,10 @@ public class HttpClientSPIAgentTest {
 	public void testDestroy() throws Exception {
 
 		// Without log
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			HttpClientSPIAgent.class.getName(), Level.OFF);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						HttpClientSPIAgent.class.getName(), Level.OFF);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		ServerSocketChannel serverSocketChannel =
 			SocketUtil.createServerSocketChannel(
@@ -413,9 +415,10 @@ public class HttpClientSPIAgentTest {
 		Assert.assertTrue(logRecords.isEmpty());
 
 		// With log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			HttpClientSPIAgent.class.getName(), Level.WARNING);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						HttpClientSPIAgent.class.getName(), Level.WARNING);
+		logRecords = captureHandler.getLogRecords();
 
 		httpClientSPIAgent = new HttpClientSPIAgent(
 			_spiConfiguration,
@@ -623,9 +626,10 @@ public class HttpClientSPIAgentTest {
 		closePeers(socket, serverSocket);
 
 		// Force close, failed without log
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			HttpClientSPIAgent.class.getName(), Level.OFF);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						HttpClientSPIAgent.class.getName(), Level.OFF);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		socket = new Socket(
 			InetAddressUtil.getLoopbackInetAddress(),
@@ -644,9 +648,10 @@ public class HttpClientSPIAgentTest {
 		Assert.assertTrue(logRecords.isEmpty());
 
 		// Force close, failed with log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			HttpClientSPIAgent.class.getName(), Level.WARNING);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						HttpClientSPIAgent.class.getName(), Level.WARNING);
+		logRecords = captureHandler.getLogRecords();
 
 		socket = new Socket(
 			InetAddressUtil.getLoopbackInetAddress(),
@@ -788,9 +793,10 @@ public class HttpClientSPIAgentTest {
 		closePeers(socket, serverSocket);
 
 		// Unable to send, unable to close, without log
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			HttpClientSPIAgent.class.getName(), Level.OFF);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						HttpClientSPIAgent.class.getName(), Level.OFF);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		socket = new Socket(
 			InetAddressUtil.getLoopbackInetAddress(),
@@ -827,9 +833,10 @@ public class HttpClientSPIAgentTest {
 		closePeers(socket, serverSocket);
 
 		// Unable to send, unable to close, with log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			HttpClientSPIAgent.class.getName(), Level.WARNING);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						HttpClientSPIAgent.class.getName(), Level.WARNING);
+		logRecords = captureHandler.getLogRecords();
 
 		socket = new Socket(
 			InetAddressUtil.getLoopbackInetAddress(),

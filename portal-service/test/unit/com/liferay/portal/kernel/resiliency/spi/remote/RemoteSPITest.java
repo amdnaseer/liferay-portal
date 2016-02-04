@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.resiliency.spi.agent.SPIAgentFactoryUtil;
 import com.liferay.portal.kernel.resiliency.spi.provider.SPISynchronousQueueUtil;
 import com.liferay.portal.kernel.resiliency.spi.remote.RemoteSPI.RegisterCallback;
 import com.liferay.portal.kernel.resiliency.spi.remote.RemoteSPI.SPIShutdownHook;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -415,9 +416,10 @@ public class RemoteSPITest {
 		Assert.assertTrue(spiShutdownHook.shutdown(0, null));
 
 		// Unable to stop with log
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			RemoteSPI.class.getName(), Level.SEVERE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						RemoteSPI.class.getName(), Level.SEVERE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		_mockRemoteSPI.setFailOnStop(true);
 
@@ -434,9 +436,10 @@ public class RemoteSPITest {
 		Assert.assertSame(RemoteException.class, throwable.getClass());
 
 		// Unable to stop without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			RemoteSPI.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						RemoteSPI.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		_mockRemoteSPI.setFailOnStop(true);
 
@@ -445,9 +448,10 @@ public class RemoteSPITest {
 		Assert.assertTrue(logRecords.isEmpty());
 
 		// Unable to destroy with log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			RemoteSPI.class.getName(), Level.SEVERE);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						RemoteSPI.class.getName(), Level.SEVERE);
+		logRecords = captureHandler.getLogRecords();
 
 		_mockRemoteSPI.setFailOnStop(false);
 		_mockRemoteSPI.setFailOnDestroy(true);
@@ -465,9 +469,10 @@ public class RemoteSPITest {
 		Assert.assertSame(RemoteException.class, throwable.getClass());
 
 		// Unable to destroy without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			RemoteSPI.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						RemoteSPI.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		_mockRemoteSPI.setFailOnStop(false);
 		_mockRemoteSPI.setFailOnDestroy(true);

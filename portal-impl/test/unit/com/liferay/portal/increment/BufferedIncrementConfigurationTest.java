@@ -14,7 +14,9 @@
 
 package com.liferay.portal.increment;
 
+import com.liferay.portal.cluster.ClusterLinkImpl;
 import com.liferay.portal.kernel.configuration.Filter;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -151,9 +153,7 @@ public class BufferedIncrementConfigurationTest {
 		}
 
 		@Around(
-			"execution(public static String com.liferay.portal.util." +
-				"PropsUtil.get(String, com.liferay.portal.kernel." +
-					"configuration.Filter)) && args(key, filter)")
+			"execution(public static String com.liferay.portal.util.PropsUtil.get(String, com.liferay.portal.kernel.configuration.Filter)) && args(key, filter)")
 		public Object get(String key, Filter filter) {
 			return _props.get(key);
 		}
@@ -185,9 +185,10 @@ public class BufferedIncrementConfigurationTest {
 		props.put(PropsKeys.BUFFERED_INCREMENT_THREADPOOL_MAX_SIZE, "-4");
 
 		PropsUtilAdvice.setProps(props);
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BufferedIncrementConfiguration.class.getName(), level);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BufferedIncrementConfiguration.class.getName(), level);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		BufferedIncrementConfiguration bufferedIncrementConfiguration =
 			new BufferedIncrementConfiguration(StringPool.BLANK);

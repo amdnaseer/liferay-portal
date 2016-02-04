@@ -29,6 +29,8 @@ import com.liferay.portal.kernel.cluster.FutureClusterResponses;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.unsync.UnsyncBufferedReader;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
+import com.liferay.portal.kernel.process.LoggingOutputProcessor;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MethodKey;
@@ -76,6 +78,7 @@ import java.util.logging.LogRecord;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -185,9 +188,10 @@ public class LuceneHelperImplTest {
 	public void testLoadIndexClusterEventListener2() throws Exception {
 		_mockClusterExecutor.setNodeNumber(2);
 		_mockClusterExecutor.setThrowException(true);
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LuceneHelperImpl.class.getName(), Level.SEVERE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LuceneHelperImpl.class.getName(), Level.SEVERE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		ClusterEvent clusterEvent = ClusterEvent.join(_clusterNode);
 
@@ -213,9 +217,10 @@ public class LuceneHelperImplTest {
 		// Debug is enabled
 
 		_mockClusterExecutor.setNodeNumber(3);
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LuceneHelperImpl.class.getName(), Level.FINE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LuceneHelperImpl.class.getName(), Level.FINE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		ClusterEvent clusterEvent = ClusterEvent.join(_clusterNode);
 
@@ -228,9 +233,10 @@ public class LuceneHelperImplTest {
 			"Number of original cluster members is greater than one", null);
 
 		// Debug is disabled
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LuceneHelperImpl.class.getName(), Level.INFO);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LuceneHelperImpl.class.getName(), Level.INFO);
+		logRecords = captureHandler.getLogRecords();
 
 		_fireClusterEventListeners(clusterEvent);
 
@@ -277,9 +283,10 @@ public class LuceneHelperImplTest {
 
 		_mockClusterExecutor.setNodeNumber(3);
 		_mockClusterExecutor.setAutoResponse(false);
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LuceneHelperImpl.class.getName(), Level.FINE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LuceneHelperImpl.class.getName(), Level.FINE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		_luceneHelperImpl.loadIndexesFromCluster(_COMPANY_ID);
 
@@ -296,9 +303,10 @@ public class LuceneHelperImplTest {
 			null);
 
 		// Debug is disabled
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LuceneHelperImpl.class.getName(), Level.INFO);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LuceneHelperImpl.class.getName(), Level.INFO);
+		logRecords = captureHandler.getLogRecords();
 
 		_luceneHelperImpl.loadIndexesFromCluster(_COMPANY_ID);
 
@@ -317,9 +325,10 @@ public class LuceneHelperImplTest {
 		// Debug is enabled
 
 		_mockClusterExecutor.setNodeNumber(2);
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LuceneHelperImpl.class.getName(), Level.FINE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LuceneHelperImpl.class.getName(), Level.FINE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		_luceneHelperImpl.loadIndexesFromCluster(_COMPANY_ID);
 
@@ -328,9 +337,10 @@ public class LuceneHelperImplTest {
 		_assertLogger(logRecords.get(0), "invalid port", null);
 
 		// Debug is disabled
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LuceneHelperImpl.class.getName(), Level.INFO);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LuceneHelperImpl.class.getName(), Level.INFO);
+		logRecords = captureHandler.getLogRecords();
 
 		_luceneHelperImpl.loadIndexesFromCluster(_COMPANY_ID);
 
@@ -347,9 +357,10 @@ public class LuceneHelperImplTest {
 	public void testLoadIndexFromCluster4() throws Exception {
 		_mockClusterExecutor.setNodeNumber(2);
 		_mockClusterExecutor.setPort(1024);
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LuceneHelperImpl.class.getName(), Level.FINE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LuceneHelperImpl.class.getName(), Level.FINE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		_luceneHelperImpl.loadIndexesFromCluster(_COMPANY_ID);
 
@@ -378,9 +389,10 @@ public class LuceneHelperImplTest {
 		_mockClusterExecutor.setNodeNumber(2);
 		_mockClusterExecutor.setInvokeMethodThrowException(true);
 		_mockClusterExecutor.setPort(1024);
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LuceneHelperImpl.class.getName(), Level.FINE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LuceneHelperImpl.class.getName(), Level.FINE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		_luceneHelperImpl.loadIndexesFromCluster(_COMPANY_ID);
 
@@ -392,9 +404,10 @@ public class LuceneHelperImplTest {
 			Exception.class);
 
 		// Debug is disabled
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LuceneHelperImpl.class.getName(), Level.INFO);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LuceneHelperImpl.class.getName(), Level.INFO);
+		logRecords = captureHandler.getLogRecords();
 
 		_luceneHelperImpl.loadIndexesFromCluster(_COMPANY_ID);
 
@@ -410,9 +423,10 @@ public class LuceneHelperImplTest {
 	@Test
 	public void testLoadIndexFromCluster6() throws Exception {
 		_mockClusterExecutor.setNodeNumber(1);
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LuceneHelperImpl.class.getName(), Level.FINE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LuceneHelperImpl.class.getName(), Level.FINE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		_luceneHelperImpl.loadIndexesFromCluster(_COMPANY_ID);
 
@@ -433,8 +447,10 @@ public class LuceneHelperImplTest {
 	)
 	@Test
 	public void testLoadIndexFromCluster7() throws Exception {
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LuceneHelperImpl.class.getName(), Level.FINE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LuceneHelperImpl.class.getName(), Level.FINE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		_luceneHelperImpl.loadIndexesFromCluster(0);
 
@@ -806,6 +822,11 @@ public class LuceneHelperImplTest {
 	private class MockIndexAccessor implements IndexAccessor {
 
 		@Override
+		public IndexSearcher acquireIndexSearcher() throws IOException {
+			return null;
+		}
+
+		@Override
 		public void addDocument(Document document) {
 		}
 
@@ -845,6 +866,11 @@ public class LuceneHelperImplTest {
 		}
 
 		@Override
+		public void invalidate() {
+
+		}
+
+		@Override
 		public void loadIndex(InputStream inputStream) throws IOException {
 			UnsyncByteArrayOutputStream unsyncByteArrayOutputStream =
 				new UnsyncByteArrayOutputStream();
@@ -852,6 +878,11 @@ public class LuceneHelperImplTest {
 			StreamUtil.transfer(inputStream, unsyncByteArrayOutputStream);
 
 			_bytes = unsyncByteArrayOutputStream.toByteArray();
+		}
+
+		@Override
+		public void releaseIndexSearcher(IndexSearcher indexSearcher) throws IOException {
+
 		}
 
 		@Override

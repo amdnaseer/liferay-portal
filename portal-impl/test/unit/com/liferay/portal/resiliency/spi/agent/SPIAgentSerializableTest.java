@@ -23,10 +23,12 @@ import com.liferay.portal.kernel.nio.intraband.MockRegistrationReference;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
 import com.liferay.portal.kernel.nio.intraband.mailbox.MailboxException;
 import com.liferay.portal.kernel.nio.intraband.mailbox.MailboxUtil;
+import com.liferay.portal.kernel.process.LoggingOutputProcessor;
 import com.liferay.portal.kernel.resiliency.spi.agent.annotation.Direction;
 import com.liferay.portal.kernel.resiliency.spi.agent.annotation.DistributedRegistry;
 import com.liferay.portal.kernel.resiliency.spi.agent.annotation.MatchType;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.util.ClassLoaderPool;
@@ -132,9 +134,10 @@ public class SPIAgentSerializableTest {
 		String nondistributed = "NONDISTRIBUTED";
 
 		mockHttpServletRequest.setAttribute(nondistributed, nondistributed);
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			SPIAgentSerializable.class.getName(), Level.OFF);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						SPIAgentSerializable.class.getName(), Level.OFF);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		Map<String, Serializable> distributedRequestAttributes =
 			SPIAgentSerializable.extractDistributedRequestAttributes(
@@ -148,8 +151,10 @@ public class SPIAgentSerializableTest {
 
 		// With log, warn
 
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			SPIAgentSerializable.class.getName(), Level.WARNING);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						SPIAgentSerializable.class.getName(), Level.WARNING);
+		logRecords = captureHandler.getLogRecords();
 
 		distributedRequestAttributes =
 			SPIAgentSerializable.extractDistributedRequestAttributes(
@@ -170,9 +175,10 @@ public class SPIAgentSerializableTest {
 			distributedRequestAttributes.get(distributedSerializable));
 
 		// With log, debug
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			SPIAgentSerializable.class.getName(), Level.FINE);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						SPIAgentSerializable.class.getName(), Level.FINE);
+		 logRecords = captureHandler.getLogRecords();
 
 		distributedRequestAttributes =
 			SPIAgentSerializable.extractDistributedRequestAttributes(
@@ -260,9 +266,10 @@ public class SPIAgentSerializableTest {
 	public void testExtractSessionAttributes() {
 
 		// Without log, no portlet session
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			SPIAgentSerializable.class.getName(), Level.OFF);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						SPIAgentSerializable.class.getName(), Level.OFF);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		MockHttpServletRequest mockHttpServletRequest =
 			new MockHttpServletRequest();
@@ -395,9 +402,10 @@ public class SPIAgentSerializableTest {
 			portletSessionAttributes.get(serializeableAttribute));
 
 		// With log, no portlet session
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			SPIAgentSerializable.class.getName(), Level.WARNING);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						SPIAgentSerializable.class.getName(), Level.WARNING);
+		logRecords = captureHandler.getLogRecords();
 
 		sessionAttributes = SPIAgentSerializable.extractSessionAttributes(
 			mockHttpServletRequest);
@@ -420,9 +428,10 @@ public class SPIAgentSerializableTest {
 			sessionAttributes.get(portletSessionAttributesName1));
 
 		// With log, with nonempty portlet session
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			SPIAgentSerializable.class.getName(), Level.WARNING);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						SPIAgentSerializable.class.getName(), Level.WARNING);
+		logRecords = captureHandler.getLogRecords();
 
 		mockHttpServletRequest.setAttribute(
 			WebKeys.PORTLET_SESSION, portletMockHttpSession);

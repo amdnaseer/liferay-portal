@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.cluster.Address;
 import com.liferay.portal.kernel.cluster.Priority;
 import com.liferay.portal.kernel.cluster.messaging.ClusterForwardMessageListener;
 import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.util.CharPool;
@@ -374,8 +375,10 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 
 		jChannel.close();
 
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			ClusterLinkImpl.class.getName(), Level.WARNING);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						ClusterLinkImpl.class.getName(), Level.WARNING);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		clusterLinkImpl.sendMulticastMessage(message, Priority.LEVEL1);
 
@@ -406,9 +409,10 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		JChannel jChannel = jChannels.get(0);
 
 		jChannel.disconnect();
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			ClusterLinkImpl.class.getName(), Level.WARNING);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						ClusterLinkImpl.class.getName(), Level.WARNING);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		clusterLinkImpl.sendMulticastMessage(message, Priority.LEVEL1);
 
@@ -494,9 +498,10 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		JChannel jChannel = jChannels.get(0);
 
 		jChannel.close();
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			ClusterLinkImpl.class.getName(), Level.WARNING);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						ClusterLinkImpl.class.getName(), Level.WARNING);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		clusterLinkImpl.sendUnicastMessage(
 			new AddressImpl(new MockAddress()), message, Priority.LEVEL1);
@@ -528,9 +533,10 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		JChannel jChannel = jChannels.get(0);
 
 		jChannel.disconnect();
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			ClusterLinkImpl.class.getName(), Level.WARNING);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						ClusterLinkImpl.class.getName(), Level.WARNING);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		clusterLinkImpl.sendUnicastMessage(
 			new AddressImpl(new MockAddress()), message, Priority.LEVEL1);
@@ -682,8 +688,8 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 		}
 
 		@Override
-		public void viewAccepted(View view) {
-			super.view = view;
+		protected void doReceive(org.jgroups.Message message) {
+
 		}
 
 		public String waitLocalMessage() throws Exception {

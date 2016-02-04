@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.nio.intraband.DatagramHelper;
 import com.liferay.portal.kernel.nio.intraband.MockIntraband;
 import com.liferay.portal.kernel.nio.intraband.MockRegistrationReference;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.util.ReflectionUtil;
@@ -168,9 +169,10 @@ public class IntrabandPortalCacheTest {
 		Assert.assertEquals(testValue, intrabandPortalCache.get(testKey));
 
 		// Unable to get, with log
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			IntrabandPortalCache.class.getName(), Level.WARNING);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						IntrabandPortalCache.class.getName(), Level.WARNING);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		RuntimeException runtimeException = new RuntimeException();
 
@@ -186,9 +188,10 @@ public class IntrabandPortalCacheTest {
 		Assert.assertSame(runtimeException, logRecord.getThrown());
 
 		// Unable to get, without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			IntrabandPortalCache.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						IntrabandPortalCache.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		Assert.assertNull(intrabandPortalCache.get(testKey));
 		Assert.assertTrue(logRecords.isEmpty());
@@ -262,9 +265,10 @@ public class IntrabandPortalCacheTest {
 		Assert.assertEquals(testValues, intrabandPortalCache.get(testKeys));
 
 		// Unable to bulk get, with log
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			IntrabandPortalCache.class.getName(), Level.WARNING);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						IntrabandPortalCache.class.getName(), Level.WARNING);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		RuntimeException runtimeException = new RuntimeException();
 
@@ -283,9 +287,10 @@ public class IntrabandPortalCacheTest {
 		Assert.assertSame(runtimeException, logRecord.getThrown());
 
 		// Unable to bulk get, without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			IntrabandPortalCache.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						IntrabandPortalCache.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		Assert.assertEquals(
 			Arrays.asList(null, null, null),

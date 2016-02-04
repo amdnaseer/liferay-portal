@@ -14,10 +14,12 @@
 
 package com.liferay.portal.kernel.resiliency.spi.agent;
 
+import com.liferay.portal.kernel.nio.intraband.BaseAsyncDatagramReceiveHandler;
 import com.liferay.portal.kernel.process.ProcessExecutor;
 import com.liferay.portal.kernel.resiliency.spi.MockSPI;
 import com.liferay.portal.kernel.resiliency.spi.SPI;
 import com.liferay.portal.kernel.resiliency.spi.SPIUtil;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -179,9 +181,10 @@ public class AcceptorServletTest {
 		// IOException on prepare request
 
 		_recordSPIAgent.setIOExceptionOnPrepareRequest(true);
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			AcceptorServlet.class.getName(), Level.SEVERE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						AcceptorServlet.class.getName(), Level.SEVERE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		try {
 			acceptorServlet.service(
@@ -208,9 +211,10 @@ public class AcceptorServletTest {
 
 		_recordSPIAgent.setIOExceptionOnPrepareRequest(false);
 		_recordSPIAgent.setRuntimeExceptionOnPrepareRequest(true);
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			AcceptorServlet.class.getName(), Level.SEVERE);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						AcceptorServlet.class.getName(), Level.SEVERE);
+		logRecords = captureHandler.getLogRecords();
 
 		try {
 			acceptorServlet.service(

@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.log.Jdk14LogFactoryImpl;
 import com.liferay.portal.kernel.log.LogFactory;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.mail.MailMessage;
+import com.liferay.portal.kernel.nio.intraband.rpc.BootstrapRPCDatagramReceiveHandler;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.model.Group;
@@ -93,9 +95,10 @@ public abstract class BaseSubscriptionTestCase {
 	@Test
 	public void testSubscriptionBaseModelWhenInContainerModel()
 		throws Exception {
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		long containerModelId = addContainerModel(
 			DEFAULT_PARENT_CONTAINER_MODEL_ID);
@@ -116,9 +119,10 @@ public abstract class BaseSubscriptionTestCase {
 	@Test
 	public void testSubscriptionBaseModelWhenInRootContainerModel()
 		throws Exception {
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		long baseModelId = addBaseModel(DEFAULT_PARENT_CONTAINER_MODEL_ID);
 
@@ -136,9 +140,10 @@ public abstract class BaseSubscriptionTestCase {
 	@Test
 	public void testSubscriptionContainerModelWhenInContainerModel()
 		throws Exception {
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		long containerModelId = addContainerModel(
 			DEFAULT_PARENT_CONTAINER_MODEL_ID);
@@ -157,9 +162,10 @@ public abstract class BaseSubscriptionTestCase {
 	@Test
 	public void testSubscriptionContainerModelWhenInRootContainerModel()
 		throws Exception {
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		long containerModelId = addContainerModel(
 			DEFAULT_PARENT_CONTAINER_MODEL_ID);
@@ -174,9 +180,10 @@ public abstract class BaseSubscriptionTestCase {
 	@Test
 	public void testSubscriptionContainerModelWhenInSubcontainerModel()
 		throws Exception {
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		long containerModelId = addContainerModel(
 			DEFAULT_PARENT_CONTAINER_MODEL_ID);
@@ -197,9 +204,10 @@ public abstract class BaseSubscriptionTestCase {
 	@Test
 	public void testSubscriptionRootContainerModelWhenInContainerModel()
 		throws Exception {
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		addSubscriptionContainerModel(DEFAULT_PARENT_CONTAINER_MODEL_ID);
 
@@ -218,9 +226,10 @@ public abstract class BaseSubscriptionTestCase {
 	@Test
 	public void testSubscriptionRootContainerModelWhenInRootContainerModel()
 		throws Exception {
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		addSubscriptionContainerModel(DEFAULT_PARENT_CONTAINER_MODEL_ID);
 
@@ -236,9 +245,10 @@ public abstract class BaseSubscriptionTestCase {
 	@Test
 	public void testSubscriptionRootContainerModelWhenInSubcontainerModel()
 		throws Exception {
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LoggerMockMailServiceImpl.class.getName(), Level.INFO);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		addSubscriptionContainerModel(DEFAULT_PARENT_CONTAINER_MODEL_ID);
 

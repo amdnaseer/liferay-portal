@@ -25,6 +25,9 @@ import com.liferay.portal.kernel.nio.intraband.IntrabandTestUtil;
 import com.liferay.portal.kernel.nio.intraband.RecordCompletionHandler;
 import com.liferay.portal.kernel.nio.intraband.RecordDatagramReceiveHandler;
 import com.liferay.portal.kernel.nio.intraband.RegistrationReference;
+import com.liferay.portal.kernel.nio.intraband.welder.fifo.FIFOUtil;
+import com.liferay.portal.kernel.process.LoggingOutputProcessor;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.util.Time;
@@ -98,9 +101,10 @@ public class SelectorIntrabandTest {
 	public void testCreateAndDestroy() throws Exception {
 
 		// Close selector, with log
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			SelectorIntraband.class.getName(), Level.INFO);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						SelectorIntraband.class.getName(), Level.INFO);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		Thread wakeUpThread = new Thread(
 			new WakeUpRunnable(_selectorIntraband));
@@ -136,9 +140,10 @@ public class SelectorIntrabandTest {
 		// Close selector, without log
 
 		_selectorIntraband = new SelectorIntraband(_DEFAULT_TIMEOUT);
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			SelectorIntraband.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						SelectorIntraband.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		wakeUpThread = new Thread(new WakeUpRunnable(_selectorIntraband));
 
@@ -181,9 +186,10 @@ public class SelectorIntrabandTest {
 					writePipe.source(), readPipe.sink());
 
 		long sequenceId = 100;
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.WARNING);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.WARNING);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		Jdk14LogImplAdvice.reset();
 
@@ -202,9 +208,10 @@ public class SelectorIntrabandTest {
 			logRecords.get(0), "Dropped ownerless ACK response ");
 
 		// Receive ACK response, no ACK request, without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		Jdk14LogImplAdvice.reset();
 
@@ -248,9 +255,10 @@ public class SelectorIntrabandTest {
 			recordCompletionHandler.getAttachment());
 
 		// Receive response, no request, with log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.WARNING);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.WARNING);
+		logRecords = captureHandler.getLogRecords();
 
 		Jdk14LogImplAdvice.reset();
 
@@ -269,9 +277,10 @@ public class SelectorIntrabandTest {
 			logRecords.get(0), "Dropped ownerless response ");
 
 		// Receive response, no request, without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		Jdk14LogImplAdvice.reset();
 
@@ -321,9 +330,10 @@ public class SelectorIntrabandTest {
 
 		// Receive response, with request, without replied completion handler,
 		// with log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.WARNING);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.WARNING);
+		logRecords = captureHandler.getLogRecords();
 
 		requestDatagram = Datagram.createRequestDatagram(_type, _data);
 
@@ -359,9 +369,10 @@ public class SelectorIntrabandTest {
 
 		// Receive response, with request, without replied completion handler,
 		// without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		requestDatagram = Datagram.createRequestDatagram(_type, _data);
 
@@ -393,9 +404,10 @@ public class SelectorIntrabandTest {
 		Assert.assertTrue(logRecords.isEmpty());
 
 		// Receive request, requires ACK, no datagram receive handler, with log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.WARNING);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.WARNING);
+		logRecords = captureHandler.getLogRecords();
 
 		requestDatagram = Datagram.createRequestDatagram(_type, _data);
 
@@ -428,9 +440,10 @@ public class SelectorIntrabandTest {
 			logRecords.get(0), "Dropped ownerless request ");
 
 		// Receive request, no datagram receive handler, without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		requestDatagram = Datagram.createRequestDatagram(_type, _data);
 
@@ -448,9 +461,10 @@ public class SelectorIntrabandTest {
 		Assert.assertTrue(logRecords.isEmpty());
 
 		// Receive request, with datagram receive handler,
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.SEVERE);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.SEVERE);
+		logRecords = captureHandler.getLogRecords();
 
 		requestDatagram = Datagram.createRequestDatagram(_type, _data);
 
@@ -931,9 +945,10 @@ public class SelectorIntrabandTest {
 		Assert.assertArrayEquals(_data, dataByteBuffer.array());
 
 		// Callback timeout, with log
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.WARNING);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.WARNING);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		recordCompletionHandler = new RecordCompletionHandler<Object>();
 
@@ -953,9 +968,10 @@ public class SelectorIntrabandTest {
 			logRecords.get(0), "Removed timeout response waiting datagram");
 
 		// Callback timeout, without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		recordCompletionHandler = new RecordCompletionHandler<Object>();
 
@@ -970,9 +986,10 @@ public class SelectorIntrabandTest {
 		Assert.assertTrue(logRecords.isEmpty());
 
 		// Callback timeout, completion handler causes NPE
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			SelectorIntraband.class.getName(), Level.SEVERE);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.SEVERE);
+		logRecords = captureHandler.getLogRecords();
 
 		recordCompletionHandler = new RecordCompletionHandler<Object>() {
 
