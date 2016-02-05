@@ -402,6 +402,15 @@
 		<servlet-name>I18n Servlet</servlet-name>
 		<url-pattern>/cs_CZ/*</url-pattern>
 	</servlet-mapping>
+	<!-- ARENA -->
+	<servlet-mapping>
+		<servlet-name>I18n Servlet</servlet-name>
+		<url-pattern>/cy/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>I18n Servlet</servlet-name>
+		<url-pattern>/cy_GB/*</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>I18n Servlet</servlet-name>
 		<url-pattern>/da/*</url-pattern>
@@ -482,6 +491,15 @@
 		<servlet-name>I18n Servlet</servlet-name>
 		<url-pattern>/fi_FI/*</url-pattern>
 	</servlet-mapping>
+	<!-- ARENA -->
+	<servlet-mapping>
+		<servlet-name>I18n Servlet</servlet-name>
+		<url-pattern>/fo/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>I18n Servlet</servlet-name>
+		<url-pattern>/fo_FO/*</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>I18n Servlet</servlet-name>
 		<url-pattern>/fr/*</url-pattern>
@@ -557,6 +575,15 @@
 	<servlet-mapping>
 		<servlet-name>I18n Servlet</servlet-name>
 		<url-pattern>/ja_JP/*</url-pattern>
+	</servlet-mapping>
+	<!-- ARENA -->
+	<servlet-mapping>
+		<servlet-name>I18n Servlet</servlet-name>
+		<url-pattern>/kl/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>I18n Servlet</servlet-name>
+		<url-pattern>/kl_GL/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>I18n Servlet</servlet-name>
@@ -634,9 +661,22 @@
 		<servlet-name>I18n Servlet</servlet-name>
 		<url-pattern>/ru/*</url-pattern>
 	</servlet-mapping>
+	<!-- ARENA -->
+	<servlet-mapping>
+		<servlet-name>I18n Servlet</servlet-name>
+		<url-pattern>/ru_FI/*</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>I18n Servlet</servlet-name>
 		<url-pattern>/ru_RU/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>I18n Servlet</servlet-name>
+		<url-pattern>/se/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>I18n Servlet</servlet-name>
+		<url-pattern>/se_FI/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>I18n Servlet</servlet-name>
@@ -960,6 +1000,9 @@
 			<url-pattern>/fa_IR/c/portal/protected</url-pattern>
 			<url-pattern>/fi/c/portal/protected</url-pattern>
 			<url-pattern>/fi_FI/c/portal/protected</url-pattern>
+			<!-- ARENA -->
+			<url-pattern>/fo/c/portal/protected</url-pattern>
+			<url-pattern>/fo_FO/c/portal/protected</url-pattern>
 			<url-pattern>/fr/c/portal/protected</url-pattern>
 			<url-pattern>/fr_CA/c/portal/protected</url-pattern>
 			<url-pattern>/fr_FR/c/portal/protected</url-pattern>
@@ -979,6 +1022,11 @@
 			<url-pattern>/iw_IL/c/portal/protected</url-pattern>
 			<url-pattern>/ja/c/portal/protected</url-pattern>
 			<url-pattern>/ja_JP/c/portal/protected</url-pattern>
+			<!-- ARENA -->
+			<url-pattern>/kl/c/portal/protected</url-pattern>
+			<url-pattern>/kl_GL/c/portal/protected</url-pattern>
+			<url-pattern>/cy/c/portal/protected</url-pattern>
+			<url-pattern>/cy_GB/c/portal/protected</url-pattern>
 			<url-pattern>/ko/c/portal/protected</url-pattern>
 			<url-pattern>/ko_KR/c/portal/protected</url-pattern>
 			<url-pattern>/lo/c/portal/protected</url-pattern>
@@ -998,7 +1046,11 @@
 			<url-pattern>/ro/c/portal/protected</url-pattern>
 			<url-pattern>/ro_RO/c/portal/protected</url-pattern>
 			<url-pattern>/ru/c/portal/protected</url-pattern>
+			<!-- ARENA -->
+			<url-pattern>/ru_FI/c/portal/protected</url-pattern>
 			<url-pattern>/ru_RU/c/portal/protected</url-pattern>
+			<url-pattern>/se/c/portal/protected</url-pattern>
+			<url-pattern>/se_FI/c/portal/protected</url-pattern>
 			<url-pattern>/sk/c/portal/protected</url-pattern>
 			<url-pattern>/sk_SK/c/portal/protected</url-pattern>
 			<url-pattern>/sl/c/portal/protected</url-pattern>

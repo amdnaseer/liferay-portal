@@ -616,6 +616,7 @@ public class RuntimePageImpl implements RuntimePage {
 					// On interruption, stop waiting, force all pending portlets
 					// to fall back to ajax loading or an error message.
 
+					_log.error("Interrupted execution for portlet " + portlet.getPortletId(), ie); // Arena
 					waitTime = -1;
 				}
 				catch (TimeoutException te) {
@@ -623,6 +624,7 @@ public class RuntimePageImpl implements RuntimePage {
 					// On timeout, stop waiting, force all pending portlets to
 					// fall back to ajax loading or an error message.
 
+					_log.error("Timeout for portlet " + portlet.getPortletId(), te); // Arena
 					waitTime = -1;
 				}
 				catch (CancellationException ce) {
@@ -630,13 +632,11 @@ public class RuntimePageImpl implements RuntimePage {
 					// This should only happen on a concurrent shutdown of the
 					// thread pool. Simply stops the render process.
 
-					if (_log.isDebugEnabled()) {
-						_log.debug(
+					_log.error( // Arena
 							"Asynchronized cancellation detected that should " +
 								"only be caused by a concurrent shutdown of " +
 									"the thread pool",
 							ce);
-					}
 
 					return;
 				}

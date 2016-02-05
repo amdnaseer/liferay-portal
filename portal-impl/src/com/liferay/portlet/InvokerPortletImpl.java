@@ -354,11 +354,10 @@ public class InvokerPortletImpl implements InvokerPortlet {
 
 		stopWatch.start();
 
-		String remoteUser = renderRequest.getRemoteUser();
+		// String remoteUser = renderRequest.getRemoteUser();
 
-		if ((remoteUser == null) || (_expCache == null) ||
-			(_expCache.intValue() == 0)) {
-
+		if (// (remoteUser == null) ||
+				(_expCache == null) || (_expCache.intValue() == 0)) {  // Arena
 			invokeRender(renderRequest, renderResponse);
 		}
 		else {
