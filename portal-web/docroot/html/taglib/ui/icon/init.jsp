@@ -133,7 +133,8 @@ else {
 		sb.append(UnicodeLanguageUtil.get(pageContext, message));
 		sb.append("')\"");
 	}
-	else {
+	else if (((iconMenuIconCount != null) && ((iconMenuSingleIcon == null) || iconMenuShowWhenSingleIcon)) ||
+			 ((iconListIconCount != null) && ((iconListSingleIcon == null) || iconListShowWhenSingleIcon)) || label) { // ARENA
 		sb.append(" title=\"");
 		sb.append(LanguageUtil.get(pageContext, message));
 		sb.append("\"");
