@@ -29,6 +29,7 @@ long liveGroupId = ((Long)request.getAttribute("edit_pages.jsp-liveGroupId")).lo
 long stagingGroupId = ((Long)request.getAttribute("edit_pages.jsp-stagingGroupId")).longValue();
 
 Layout selLayout = (Layout)request.getAttribute("edit_pages.jsp-selLayout");
+boolean hasChildren = selLayout != null && selLayout.hasChildren(); // Arena
 long selPlid = ((Long)request.getAttribute("edit_pages.jsp-selPlid")).longValue();
 long layoutId = ((Long)request.getAttribute("edit_pages.jsp-layoutId")).longValue();
 boolean privateLayout = ((Boolean)request.getAttribute("edit_pages.jsp-privateLayout")).booleanValue();
@@ -355,7 +356,8 @@ boolean showAddAction = ParamUtil.getBoolean(request, "showAddAction", true);
 			action = action || '<%= Constants.UPDATE %>';
 
 			if (action == '<%= Constants.DELETE %>') {
-				if (!confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-the-selected-page") %>')) {
+	            // Arena
+				if (!confirm('<%= UnicodeLanguageUtil.get(pageContext, hasChildren ? "are-you-sure-you-want-to-delete-the-selected-page-and-subpages" : "are-you-sure-you-want-to-delete-the-selected-page") %>')) {
 					return false;
 				}
 
