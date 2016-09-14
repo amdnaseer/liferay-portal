@@ -237,6 +237,8 @@ String contentsLanguageDir = LanguageUtil.get(contentsLocale, "lang.dir");
 			}
 		}
 	);
+
+    CKEDITOR.dtd.$removeEmpty['i'] = 0; //Arena
 };
 
 window['<%= HtmlUtil.escapeJS(name) %>Config']();
