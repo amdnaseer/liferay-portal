@@ -16,6 +16,8 @@ package com.liferay.portal.kernel.nio.intraband.welder.fifo;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.resiliency.mpi.MPIHelperUtil;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.test.NewClassLoaderJUnitTestRunner;
@@ -153,9 +155,10 @@ public class FIFOUtilTest {
 		if (!_shouldTest()) {
 			return;
 		}
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			FIFOUtil.class.getName(), Level.WARNING);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						FIFOUtil.class.getName(), Level.WARNING);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		File newTmpDir = new File("newTmpDir");
 
@@ -196,9 +199,10 @@ public class FIFOUtilTest {
 		if (!_shouldTest()) {
 			return;
 		}
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			FIFOUtil.class.getName(), Level.OFF);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						FIFOUtil.class.getName(), Level.OFF);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		File newTmpDir = new File("newTmpDir");
 

@@ -24,6 +24,8 @@ import com.liferay.portal.kernel.cluster.ClusterNodeResponses;
 import com.liferay.portal.kernel.cluster.ClusterRequest;
 import com.liferay.portal.kernel.cluster.FutureClusterResponses;
 import com.liferay.portal.kernel.executor.PortalExecutorManagerUtil;
+import com.liferay.portal.kernel.nio.intraband.welder.fifo.FIFOUtil;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.util.MethodHandler;
@@ -269,9 +271,10 @@ public class ClusterExecutorImplTest extends BaseClusterExecutorImplTestCase {
 
 			portalExecutorManagerUtil.setPortalExecutorManager(
 				new ClusterExecutorImplTest.MockPortalExecutorManager());
-
-			List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-				ClusterExecutorImpl.class.getName(), Level.SEVERE);
+			CaptureHandler captureHandler =
+					JDKLoggerTestUtil.configureJDKLogger(
+							ClusterExecutorImpl.class.getName(), Level.SEVERE);
+			List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 			clusterExecutorImpl = new ClusterExecutorImpl();
 

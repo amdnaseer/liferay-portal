@@ -22,6 +22,8 @@ import com.liferay.portal.kernel.nio.intraband.MockRegistrationReference;
 import com.liferay.portal.kernel.nio.intraband.SystemDataType;
 import com.liferay.portal.kernel.process.ProcessCallable;
 import com.liferay.portal.kernel.process.ProcessException;
+import com.liferay.portal.kernel.process.ProcessExecutor;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
@@ -71,8 +73,10 @@ public class BootstrapRPCDatagramReceiveHandlerTest {
 		Assert.assertEquals(
 			TestProcessCallable.class.getName(), deserializer.readObject());
 
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BootstrapRPCDatagramReceiveHandler.class.getName(), Level.SEVERE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BootstrapRPCDatagramReceiveHandler.class.getName(), Level.SEVERE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		serializer = new Serializer();
 

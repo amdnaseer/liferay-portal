@@ -235,16 +235,16 @@ public class SystemProperties {
 		}
 
 		// system-ext.properties
+		try { // Arena
+			Enumeration<URL> enumeration = classLoader.getResources(
+					"system-ext.properties");
 
-		try {
-			URL url = classLoader.getResource("system-ext.properties");
+			while (enumeration.hasMoreElements()) {
+				URL url = enumeration.nextElement();
 
-			if (url != null) {
-				InputStream inputStream = url.openStream();
-
-				properties.load(inputStream);
-
-				inputStream.close();
+				try (InputStream inputStream = url.openStream()) {
+					properties.load(inputStream);
+				}
 
 				if (urls != null) {
 					urls.add(url);

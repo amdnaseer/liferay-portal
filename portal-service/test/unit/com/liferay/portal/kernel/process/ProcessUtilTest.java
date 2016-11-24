@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.process;
 
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 
@@ -40,6 +41,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import com.liferay.portal.kernel.util.ThreadLocalDistributor;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.ClassRule;
@@ -194,8 +196,10 @@ public class ProcessUtilTest {
 
 	@Test
 	public void testEchoLogging() throws Exception {
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			LoggingOutputProcessor.class.getName(), Level.INFO);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						LoggingOutputProcessor.class.getName(), Level.INFO);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		Future<?> future = ProcessUtil.execute(
 			ProcessUtil.LOGGING_OUTPUT_PROCESSOR,

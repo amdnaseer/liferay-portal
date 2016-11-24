@@ -498,7 +498,7 @@ public class StripFilter extends BasePortalFilter {
 			return;
 		}
 
-		if (JavaDetector.isJDK6()) {
+		if (JavaDetector.isJDK6() || JavaDetector.isJDK7() || JavaDetector.isJDK8()) { // Arena
 			CharBuffer duplicateCharBuffer = charBuffer.duplicate();
 
 			int limit = duplicateCharBuffer.position() + endPos;

@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.process.ProcessExecutor.ProcessContext;
 import com.liferay.portal.kernel.process.ProcessExecutor.ShutdownHook;
 import com.liferay.portal.kernel.process.log.ProcessOutputStream;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
@@ -414,8 +415,10 @@ public class ProcessExecutorTest {
 
 	@Test
 	public void testBrokenPiping() throws Exception {
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			ProcessExecutor.class.getName(), Level.SEVERE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						ProcessExecutor.class.getName(), Level.SEVERE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		BrokenPipingProcessCallable brokenPipingProcessCallable =
 			new BrokenPipingProcessCallable();
@@ -779,9 +782,10 @@ public class ProcessExecutorTest {
 
 		String leadingLog = "Test leading log.\n";
 		String bodyLog = "Test body log.\n";
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			ProcessExecutor.class.getName(), Level.WARNING);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						ProcessExecutor.class.getName(), Level.WARNING);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		LeadingLogProcessCallable leadingLogProcessCallable =
 			new LeadingLogProcessCallable(leadingLog, bodyLog);
@@ -804,9 +808,10 @@ public class ProcessExecutorTest {
 			"Found corrupt leading log " + leadingLog, logRecord.getMessage());
 
 		// Fine level
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			ProcessExecutor.class.getName(), Level.FINE);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						ProcessExecutor.class.getName(), Level.FINE);
+		logRecords = captureHandler.getLogRecords();
 
 		leadingLogProcessCallable = new LeadingLogProcessCallable(
 			leadingLog, bodyLog);
@@ -835,9 +840,10 @@ public class ProcessExecutorTest {
 		Assert.assertTrue(message.contains("Invoked generic process callable"));
 
 		// Severe level
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			ProcessExecutor.class.getName(), Level.SEVERE);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						ProcessExecutor.class.getName(), Level.SEVERE);
+		logRecords = captureHandler.getLogRecords();
 
 		leadingLogProcessCallable = new LeadingLogProcessCallable(
 			leadingLog, bodyLog);

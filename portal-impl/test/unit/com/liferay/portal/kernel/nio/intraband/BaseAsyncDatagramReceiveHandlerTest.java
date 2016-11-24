@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.nio.intraband;
 
+import com.liferay.portal.kernel.nio.intraband.welder.fifo.FIFOUtil;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.test.AdviseWith;
@@ -41,8 +43,10 @@ public class BaseAsyncDatagramReceiveHandlerTest {
 	@AdviseWith(adviceClasses = {PortalExecutorManagerUtilAdvice.class})
 	@Test
 	public void testErrorDispatch() {
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseAsyncDatagramReceiveHandler.class.getName(), Level.SEVERE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseAsyncDatagramReceiveHandler.class.getName(), Level.SEVERE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		ErrorAsyncDatagramReceiveHandler errorAsyncDatagramReceiveHandler =
 			new ErrorAsyncDatagramReceiveHandler();
@@ -59,8 +63,10 @@ public class BaseAsyncDatagramReceiveHandlerTest {
 
 		Assert.assertEquals(Exception.class, throwable.getClass());
 
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseAsyncDatagramReceiveHandler.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseAsyncDatagramReceiveHandler.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		errorAsyncDatagramReceiveHandler =
 			new ErrorAsyncDatagramReceiveHandler();

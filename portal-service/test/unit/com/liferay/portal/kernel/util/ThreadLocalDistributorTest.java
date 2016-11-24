@@ -16,6 +16,7 @@ package com.liferay.portal.kernel.util;
 
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.test.NewClassLoaderJUnitTestRunner;
@@ -73,10 +74,11 @@ public class ThreadLocalDistributorTest {
 		threadLocalDistributor.setClassLoader(getClassLoader());
 		threadLocalDistributor.setThreadLocalSources(_keyValuePairs);
 
+		CaptureHandler captureHandler =
+					 JDKLoggerTestUtil.configureJDKLogger(
+							 ThreadLocalDistributor.class.getName(), Level.WARNING);
 		// With log
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			ThreadLocalDistributor.class.getName(), Level.WARNING);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		threadLocalDistributor.afterPropertiesSet();
 
@@ -104,9 +106,11 @@ public class ThreadLocalDistributorTest {
 		Assert.assertSame(TestClass._threadLocal, threadLocals.get(0));
 
 		// Without log
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						ThreadLocalDistributor.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			ThreadLocalDistributor.class.getName(), Level.OFF);
 
 		threadLocalDistributor = new ThreadLocalDistributor();
 

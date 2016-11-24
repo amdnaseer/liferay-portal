@@ -376,7 +376,7 @@ public class JSONWebServiceActionImpl implements JSONWebServiceAction {
 
 					parameterType = classLoader.loadClass(parameterTypeName);
 
-					if (!ReflectUtil.isSubclass(
+					if (!ReflectUtil.isTypeOf(  // Arena
 							parameterType, methodParameters[i].getType())) {
 
 						throw new IllegalArgumentException(

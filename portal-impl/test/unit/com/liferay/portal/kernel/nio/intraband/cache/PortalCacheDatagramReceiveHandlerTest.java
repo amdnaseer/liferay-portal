@@ -37,10 +37,7 @@ import java.lang.reflect.Method;
 
 import java.net.URL;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -410,6 +407,11 @@ public class PortalCacheDatagramReceiveHandlerTest {
 			}
 
 			return null;
+		}
+
+		@Override
+		public List<String> getKeys() {
+			return Collections.singletonList(_TEST_KEY);
 		}
 
 		@Override

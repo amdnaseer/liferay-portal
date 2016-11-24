@@ -14,10 +14,12 @@
 
 package com.liferay.portal.resiliency.spi;
 
+import com.liferay.portal.kernel.nio.intraband.BaseAsyncDatagramReceiveHandler;
 import com.liferay.portal.kernel.resiliency.spi.MockSPI;
 import com.liferay.portal.kernel.resiliency.spi.SPI;
 import com.liferay.portal.kernel.resiliency.spi.SPIConfiguration;
 import com.liferay.portal.kernel.resiliency.spi.SPIRegistryUtil;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
@@ -139,9 +141,10 @@ public class SPIRegistryImplTest {
 		};
 
 		mockSPI.spiConfiguration = spiConfiguration;
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			SPIRegistryImpl.class.getName(), Level.WARNING);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						SPIRegistryImpl.class.getName(), Level.WARNING);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		_spiRegistryImpl.registerSPI(mockSPI);
 
@@ -188,9 +191,10 @@ public class SPIRegistryImplTest {
 			logRecord2.getMessage());
 
 		// Without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			SPIRegistryImpl.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						SPIRegistryImpl.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		_spiRegistryImpl.registerSPI(mockSPI);
 

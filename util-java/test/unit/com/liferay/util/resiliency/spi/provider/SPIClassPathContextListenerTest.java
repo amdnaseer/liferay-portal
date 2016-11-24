@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.resiliency.spi.SPI;
 import com.liferay.portal.kernel.resiliency.spi.SPIConfiguration;
 import com.liferay.portal.kernel.resiliency.spi.SPIUtil;
 import com.liferay.portal.kernel.resiliency.spi.provider.SPIProvider;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.test.NewClassLoaderJUnitTestRunner;
@@ -31,6 +32,7 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.resiliency.spi.SPIRegistryImpl;
 import com.liferay.portal.util.PropsImpl;
 
 import java.io.File;
@@ -197,9 +199,10 @@ public class SPIClassPathContextListenerTest {
 	public void testClassPathGeneration() throws Exception {
 
 		// With log
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			SPIClassPathContextListener.class.getName(), Level.FINE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						SPIClassPathContextListener.class.getName(), Level.FINE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		_mockServletContext.addInitParameter(
 			"spiProviderClassName", "InvalidSPIProvider");
@@ -245,9 +248,10 @@ public class SPIClassPathContextListenerTest {
 			logRecord.getMessage());
 
 		// Without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			SPIClassPathContextListener.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						SPIClassPathContextListener.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		Field field = ReflectionUtil.getDeclaredField(SPIUtil.class, "_spi");
 
@@ -348,9 +352,10 @@ public class SPIClassPathContextListenerTest {
 		Assert.assertSame(spiProviderReference.get(), spiProviders.get(0));
 
 		// Duplicate register
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			SPIClassPathContextListener.class.getName(), Level.SEVERE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						SPIClassPathContextListener.class.getName(), Level.SEVERE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		spiClassPathContextListener.contextInitialized(
 			new ServletContextEvent(_mockServletContext));

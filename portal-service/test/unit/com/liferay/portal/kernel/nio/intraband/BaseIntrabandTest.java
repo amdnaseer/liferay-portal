@@ -17,6 +17,8 @@ package com.liferay.portal.kernel.nio.intraband;
 import com.liferay.portal.kernel.io.BigEndianCodec;
 import com.liferay.portal.kernel.nio.intraband.BaseIntraband.SendSyncDatagramCompletionHandler;
 import com.liferay.portal.kernel.nio.intraband.CompletionHandler.CompletionType;
+import com.liferay.portal.kernel.process.LoggingOutputProcessor;
+import com.liferay.portal.kernel.test.CaptureHandler;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.util.Time;
@@ -271,9 +273,10 @@ public class BaseIntrabandTest {
 	public void testHandleReading() throws Exception {
 
 		// IOException, new receive datagram, debug log
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.FINE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.FINE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		ChannelContext channelContext = new ChannelContext(null);
 
@@ -295,9 +298,10 @@ public class BaseIntrabandTest {
 		Assert.assertTrue(logRecord.getThrown() instanceof IOException);
 
 		// IOException, new receive datagram, info log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.INFO);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.INFO);
+		logRecords = captureHandler.getLogRecords();
 
 		channelContext = new ChannelContext(null);
 
@@ -319,9 +323,10 @@ public class BaseIntrabandTest {
 		Assert.assertNull(logRecord.getThrown());
 
 		// IOException, existing receive datagram, without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		channelContext = new ChannelContext(null);
 
@@ -339,9 +344,10 @@ public class BaseIntrabandTest {
 		Assert.assertTrue(logRecords.isEmpty());
 
 		// Slow reading of ownerless datagram, with log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.WARNING);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.WARNING);
+		logRecords = captureHandler.getLogRecords();
 
 		Pipe pipe = Pipe.open();
 
@@ -405,9 +411,10 @@ public class BaseIntrabandTest {
 		assertMessageStartWith(logRecord, "Dropped ownerless request ");
 
 		// Read ownerless datagram, without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		requestDatagram = Datagram.createRequestDatagram(_type, _data);
 
@@ -428,9 +435,10 @@ public class BaseIntrabandTest {
 		Assert.assertTrue(logRecords.isEmpty());
 
 		// Read ownerless ACK response, with log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.WARNING);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.WARNING);
+		logRecords = captureHandler.getLogRecords();
 
 		long sequenceId = 100;
 
@@ -453,9 +461,10 @@ public class BaseIntrabandTest {
 		assertMessageStartWith(logRecord, "Dropped ownerless ACK response ");
 
 		// Ownerless ACK response, without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		ackResponseDatagram = Datagram.createACKResponseDatagram(sequenceId);
 
@@ -500,9 +509,10 @@ public class BaseIntrabandTest {
 		Assert.assertTrue(receiveDatagram.isAckResponse());
 
 		// Ownerless response, with log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.WARNING);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.WARNING);
+		logRecords = captureHandler.getLogRecords();
 
 		Datagram responseDatagram = Datagram.createResponseDatagram(
 			requestDatagram, _data);
@@ -528,9 +538,10 @@ public class BaseIntrabandTest {
 		assertMessageStartWith(logRecord, "Dropped ownerless response ");
 
 		// Ownerless response, without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		responseDatagram = Datagram.createResponseDatagram(
 			requestDatagram, _data);
@@ -587,9 +598,10 @@ public class BaseIntrabandTest {
 		Assert.assertArrayEquals(_data, dataByteBuffer.array());
 
 		// Unconcerned response, with log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.WARNING);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.WARNING);
+		logRecords = captureHandler.getLogRecords();
 
 		requestDatagram = Datagram.createRequestDatagram(_type, _data);
 
@@ -628,9 +640,10 @@ public class BaseIntrabandTest {
 		assertMessageStartWith(logRecord, "Dropped unconcerned response ");
 
 		// Unconcerned response, without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		requestDatagram = Datagram.createRequestDatagram(_type, _data);
 
@@ -665,9 +678,10 @@ public class BaseIntrabandTest {
 		Assert.assertTrue(logRecords.isEmpty());
 
 		// Ownerless request with ACK requirement, with log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.WARNING);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.WARNING);
+		logRecords = captureHandler.getLogRecords();
 
 		requestDatagram = Datagram.createRequestDatagram(_type, _data);
 
@@ -712,9 +726,10 @@ public class BaseIntrabandTest {
 		Assert.assertTrue(datagram.isAckResponse());
 
 		// Request dispatching with failure
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.SEVERE);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.SEVERE);
+		logRecords = captureHandler.getLogRecords();
 
 		RecordDatagramReceiveHandler recordDatagramReceiveHandler =
 			new RecordDatagramReceiveHandler();
@@ -775,9 +790,10 @@ public class BaseIntrabandTest {
 	public void testHandleWriting() throws Exception {
 
 		// IOException, new send datagram, debug log
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.FINE);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.FINE);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		ChannelContext channelContext = new ChannelContext(
 			new LinkedList<Datagram>());
@@ -803,9 +819,10 @@ public class BaseIntrabandTest {
 		Assert.assertTrue(logRecord.getThrown() instanceof IOException);
 
 		// IOException, new send datagram, info log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.INFO);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.INFO);
+		logRecords = captureHandler.getLogRecords();
 
 		channelContext = new ChannelContext(new LinkedList<Datagram>());
 
@@ -830,9 +847,10 @@ public class BaseIntrabandTest {
 		Assert.assertNull(logRecord.getThrown());
 
 		// IOException, exist send datagram, with CompletionHandler, without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.OFF);
+		logRecords = captureHandler.getLogRecords();
 
 		channelContext = new ChannelContext(null);
 
@@ -999,9 +1017,10 @@ public class BaseIntrabandTest {
 		Assert.assertTrue(timeoutSequenceIds.isEmpty());
 
 		// Clean up timeout, hit, with log
-
-		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.WARNING);
+		CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.WARNING);
+		List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 		Datagram requestDatagram1 = Datagram.createRequestDatagram(
 			_type, _data);
@@ -1056,9 +1075,10 @@ public class BaseIntrabandTest {
 		recordCompletionHandler2.waitUntilTimeouted();
 
 		// Clean up timeout, hit, without log
-
-		logRecords = JDKLoggerTestUtil.configureJDKLogger(
-			BaseIntraband.class.getName(), Level.OFF);
+		captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+						BaseIntraband.class.getName(), Level.OFF);
+		captureHandler.getLogRecords();
 
 		requestDatagram1 = Datagram.createRequestDatagram(_type, _data);
 

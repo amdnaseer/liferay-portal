@@ -1306,6 +1306,10 @@
 		<priority value="WARN" />
 	</category>
 
+	<category name="com.mchange.v2.c3p0">
+		<priority value="WARN"/>
+	</category>
+
 	<root>
 		<priority value="INFO" />
 		<appender-ref ref="CONSOLE" />
