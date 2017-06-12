@@ -805,18 +805,20 @@ public class AssetUtil {
 	}
 
 	protected static String getOrderByCol(
-		String sortField, int sortType, Locale locale) {
+		String sortField, String fieldType, int sortType, Locale locale) {
 
 		if (sortField.startsWith(DDMIndexer.DDM_FIELD_PREFIX)) {
-			sortField = sortField.concat(StringPool.UNDERLINE).concat(
-				LocaleUtil.toLanguageId(locale));
 
-			if ((sortType == Sort.DOUBLE_TYPE) ||
-				(sortType == Sort.FLOAT_TYPE) || (sortType == Sort.INT_TYPE) ||
-				(sortType == Sort.LONG_TYPE)) {
+			sortField = sortField.concat(StringPool.UNDERLINE).concat(
+					LocaleUtil.toLanguageId(locale));
+
+			if (!fieldType.equals("ddm-date") &&
+					((sortType == Sort.DOUBLE_TYPE) ||
+							(sortType == Sort.FLOAT_TYPE) || (sortType == Sort.INT_TYPE) ||
+							(sortType == Sort.LONG_TYPE))) {
 
 				sortField = sortField.concat(StringPool.UNDERLINE).concat(
-					"Number");
+						"Number");
 			}
 
 			sortField = DocumentImpl.getSortableFieldName(sortField);
@@ -826,7 +828,7 @@ public class AssetUtil {
 		}
 		else if (sortField.equals("title")) {
 			sortField = DocumentImpl.getSortableFieldName(
-				"localized_title_".concat(LocaleUtil.toLanguageId(locale)));
+					"localized_title_".concat(LocaleUtil.toLanguageId(locale)));
 		}
 
 		return sortField;
@@ -846,7 +848,7 @@ public class AssetUtil {
 
 		return SortFactoryUtil.getSort(
 			AssetEntry.class, sortType,
-			getOrderByCol(sortField, sortType, locale),
+			getOrderByCol(sortField, ddmFormFieldType, sortType, locale),
 			!sortField.startsWith(DDMIndexer.DDM_FIELD_PREFIX), orderByType);
 	}
 
