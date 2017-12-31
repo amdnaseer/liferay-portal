@@ -463,7 +463,7 @@ message.
 
 	<target name="deploy-additional-jars">
 		<copy todir="${app.server.lib.global.dir}">
-			<fileset dir="lib/development" includes="hsql.jar,mariadb.jar,mysql.jar,postgresql.jar" />
+			<fileset dir="lib/development" includes="hsql.jar,mariadb.jar,mysql.jar,postgresql.jar,ojdbc8.jar" />
 			<fileset dir="lib/global" excludes="dependencies.properties" />
 		</copy>
 

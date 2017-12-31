@@ -46,10 +46,10 @@ public interface JCRStoreConfiguration {
 	@Meta.AD(deflt = "data/jackrabbit", required = true)
 	public String jackrabbitRepositoryRoot();
 
-	@Meta.AD(deflt = "repository.xml", required = true)
+	@Meta.AD(deflt = "data/jackrabbit/repository.xml", required = true)
 	public String jackrabbitConfigFilePath();
 
-	@Meta.AD(deflt = "home", required = true)
+	@Meta.AD(deflt = "data/jackrabbit/home", required = true)
 	public String jackrabbitRepositoryHome();
 
 	@Meta.AD(deflt = "none", required = true)
