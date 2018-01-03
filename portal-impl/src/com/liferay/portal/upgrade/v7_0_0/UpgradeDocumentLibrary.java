@@ -24,14 +24,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.upgrade.util.UpgradeProcessUtil;
-import com.liferay.portal.kernel.util.FileUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.LocalizationUtil;
-import com.liferay.portal.kernel.util.LoggingTimer;
-import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.*;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.repository.liferayrepository.LiferayRepository;
 import com.liferay.portal.repository.portletrepository.PortletRepository;
@@ -39,12 +32,7 @@ import com.liferay.portal.upgrade.v7_0_0.util.DLFolderTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Michael Young
@@ -266,9 +254,9 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 
 	protected void updateFileEntryTypeDDMStructureLinks() throws Exception {
 		try (LoggingTimer loggingTimer = new LoggingTimer();
-			PreparedStatement ps = connection.prepareStatement(
+             PreparedStatement ps = connection.prepareStatement(
 				"select * from DLFileEntryTypes_DDMStructures");
-			ResultSet rs = ps.executeQuery()) {
+             ResultSet rs = ps.executeQuery()) {
 
 			long classNameId = PortalUtil.getClassNameId(DLFileEntryType.class);
 
@@ -286,7 +274,7 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 
 	protected void updateFileEntryTypeNamesAndDescriptions() throws Exception {
 		try (LoggingTimer loggingTimer = new LoggingTimer();
-			PreparedStatement ps = connection.prepareStatement(
+             PreparedStatement ps = connection.prepareStatement(
 				"select companyId, groupId from Group_ where classNameId = " +
 					"?")) {
 

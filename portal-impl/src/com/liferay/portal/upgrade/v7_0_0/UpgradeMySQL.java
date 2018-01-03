@@ -12,137 +12,129 @@
  * details.
  */
 
-package com.liferay.portal.upgrade.v7_0_3;
+package com.liferay.portal.upgrade.v7_0_0;
 
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.ReleaseConstants;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
-import com.liferay.portal.kernel.util.*;
+import com.liferay.portal.kernel.util.LoggingTimer;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author Alberto Chaparro
+ * @author Amadea Fejes
  */
-public class UpgradeOracle extends UpgradeProcess {
-
-	protected void alterVarchar2Columns() throws Exception {
-		try (LoggingTimer loggingTimer = new LoggingTimer();
-             PreparedStatement ps = connection.prepareStatement(
-				"select table_name, column_name, data_length from " +
-					"user_tab_columns where data_type = 'VARCHAR2' and " +
-						"char_used = 'B'");
-             ResultSet rs = ps.executeQuery()) {
-
-			int buildNumber = getBuildNumber();
-
-			while (rs.next()) {
-				String tableName = rs.getString(1);
-
-				if (!_tableNames.contains(StringUtil.toLowerCase(tableName))) {
-					continue;
-				}
-
-				String columnName = rs.getString(2);
-				int dataLength = rs.getInt(3);
-
-				if (isBetweenBuildNumbers(
-						buildNumber, ReleaseInfo.RELEASE_5_2_9_BUILD_NUMBER,
-						ReleaseInfo.RELEASE_6_0_0_BUILD_NUMBER) ||
-					isBetweenBuildNumbers(
-						buildNumber, ReleaseInfo.RELEASE_6_0_5_BUILD_NUMBER,
-						ReleaseInfo.RELEASE_6_2_0_BUILD_NUMBER)) {
-
-					// LPS-33903
-
-					if (!ArrayUtil.contains(
-							_ORIGINAL_DATA_LENGTH_VALUES, dataLength)) {
-
-						dataLength = dataLength / 4;
-					}
-				}
-
-				try {
-					runSQL(
-						StringBundler.concat(
-							"alter table ", tableName, " modify ", columnName,
-							" varchar2(", String.valueOf(dataLength),
-							" char)"));
-				}
-				catch (SQLException sqle) {
-					if (sqle.getErrorCode() == 1441) {
-						if (_log.isWarnEnabled()) {
-							StringBundler sb = new StringBundler(6);
-
-							sb.append("Unable to alter length of column ");
-							sb.append(columnName);
-							sb.append(" for table ");
-							sb.append(tableName);
-							sb.append(" because it contains values that are ");
-							sb.append("larger than the new column length");
-
-							_log.warn(sb.toString());
-						}
-					}
-					else {
-						throw sqle;
-					}
-				}
-			}
-		}
-	}
+public class UpgradeMySQL extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
 		DB db = DBManagerUtil.getDB();
 
-		if (db.getDBType() != DBType.ORACLE) {
-			return;
-		}
+		if ((db.getDBType() == DBType.MARIADB) ||
+			(db.getDBType() == DBType.MYSQL)) {
 
-		alterVarchar2Columns();
+			upgradeDatetimePrecision();
+		}
 	}
 
-	protected int getBuildNumber() throws Exception {
-		try (PreparedStatement ps = connection.prepareStatement(
-				"select buildNumber from Release_ where servletContextName = " +
-					"?")) {
+	protected String getActualColumnType(
+			Statement statement, String tableName, String columnName)
+		throws SQLException {
 
-			ps.setString(1, ReleaseConstants.DEFAULT_SERVLET_CONTEXT_NAME);
+		StringBundler sb = new StringBundler(5);
 
-			try (ResultSet rs = ps.executeQuery()) {
-				rs.next();
+		sb.append("show columns from ");
+		sb.append(tableName);
+		sb.append(" like \"");
+		sb.append(columnName);
+		sb.append("\"");
 
-				return rs.getInt(1);
+		try (ResultSet rs = statement.executeQuery(sb.toString())) {
+			if (!rs.next()) {
+				throw new IllegalStateException(
+					StringBundler.concat(
+						"Table ", tableName, " does not have column ",
+						columnName));
+			}
+
+			return rs.getString("Type");
+		}
+	}
+
+	protected void upgradeDatetimePrecision() throws Exception {
+		DatabaseMetaData databaseMetaData = connection.getMetaData();
+
+		try (LoggingTimer loggingTimer = new LoggingTimer();
+             Statement statement = connection.createStatement();
+             ResultSet rs = databaseMetaData.getTables(null, null, null, null)) {
+
+			while (rs.next()) {
+				String tableName = rs.getString("TABLE_NAME");
+
+				if (!_tableNames.contains(StringUtil.toLowerCase(tableName))) {
+					continue;
+				}
+
+				upgradeDatetimePrecision(
+					databaseMetaData, statement, rs.getString("TABLE_CAT"),
+					rs.getString("TABLE_SCHEM"), tableName);
 			}
 		}
 	}
 
-	protected boolean isBetweenBuildNumbers(
-		int buildNumber, int startBuildNumber, int endBuildNumber) {
+	protected void upgradeDatetimePrecision(
+			DatabaseMetaData databaseMetaData, Statement statement,
+			String catalog, String schemaPattern, String tableName)
+		throws SQLException {
 
-		if ((buildNumber >= startBuildNumber) &&
-			(buildNumber < endBuildNumber)) {
+		try (ResultSet rs = databaseMetaData.getColumns(
+				catalog, schemaPattern, tableName, null)) {
 
-			return true;
+			while (rs.next()) {
+				if (Types.TIMESTAMP != rs.getInt("DATA_TYPE")) {
+					continue;
+				}
+
+				String columnName = rs.getString("COLUMN_NAME");
+
+				String actualColumnType = getActualColumnType(
+					statement, tableName, columnName);
+
+				if (actualColumnType.equals("datetime(6)")) {
+					continue;
+				}
+
+				StringBundler sb = new StringBundler(5);
+
+				sb.append("ALTER TABLE ");
+				sb.append(tableName);
+				sb.append(" MODIFY ");
+				sb.append(columnName);
+				sb.append(" datetime(6)");
+
+				String sql = sb.toString();
+
+				if (_log.isInfoEnabled()) {
+					_log.info(
+						StringBundler.concat(
+							"Updating table ", tableName, " column ",
+							columnName, " to datetime(6)"));
+				}
+
+				statement.executeUpdate(sql);
+			}
 		}
-
-		return false;
 	}
 
-	private static final int[] _ORIGINAL_DATA_LENGTH_VALUES =
-		{75, 100, 150, 200, 255, 500, 1000, 1024, 2000, 4000};
-
-	private static final Log _log = LogFactoryUtil.getLog(UpgradeOracle.class);
+	private static final Log _log = LogFactoryUtil.getLog(UpgradeMySQL.class);
 
 	private static final Set<String> _tableNames = new HashSet<>(
 		Arrays.asList(

@@ -101,11 +101,11 @@
 	</category>
 
 	<category name="com.liferay.portal.dao.db">
-		<priority value="INFO" />
+		<priority value="DEBUG" />
 	</category>
 
 	<category name="com.liferay.portal.dao.db.BaseDB">
-		<priority value="INFO" />
+		<priority value="DEBUG" />
 	</category>
 
 	<category name="com.liferay.portal.dao.jdbc.DataSourceFactoryImpl">
@@ -381,7 +381,7 @@
 	</category>
 
 	<category name="com.liferay.portal.kernel.upgrade">
-		<priority value="INFO" />
+		<priority value="DEBUG" />
 	</category>
 
 	<category name="com.liferay.portal.kernel.util.ClassUtil">

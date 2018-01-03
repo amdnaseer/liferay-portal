@@ -56,7 +56,7 @@ public abstract class UpgradeCompanyId extends UpgradeProcess {
 		}
 
 		ExecutorService executorService = Executors.newFixedThreadPool(
-			callables.size());
+				callables.size());
 
 		try {
 			List<Future<Void>> futures = executorService.invokeAll(callables);
@@ -75,20 +75,20 @@ public abstract class UpgradeCompanyId extends UpgradeProcess {
 	protected class TableUpdater implements Callable<Void> {
 
 		public TableUpdater(
-			String tableName, String foreignTableName,
-			String foreignColumnName) {
+				String tableName, String foreignTableName,
+				String foreignColumnName) {
 
 			_tableName = tableName;
 
 			_columnName = foreignColumnName;
 
 			_foreignNamesArray = new String[][] {
-				new String[] {foreignTableName, foreignColumnName}
+					new String[] {foreignTableName, foreignColumnName}
 			};
 		}
 
 		public TableUpdater(
-			String tableName, String columnName, String[][] foreignNamesArray) {
+				String tableName, String columnName, String[][] foreignNamesArray) {
 
 			_tableName = tableName;
 			_columnName = columnName;
@@ -98,24 +98,24 @@ public abstract class UpgradeCompanyId extends UpgradeProcess {
 		@Override
 		public final Void call() throws Exception {
 			try (LoggingTimer loggingTimer = new LoggingTimer(_tableName);
-				Connection connection =
-					DataAccess.getUpgradeOptimizedConnection()) {
+				 Connection connection =
+						 DataAccess.getUpgradeOptimizedConnection()) {
 
 				if (_createCompanyIdColumn) {
 					if (_log.isInfoEnabled()) {
 						_log.info(
-							"Adding column companyId to table " + _tableName);
+								"Adding column companyId to table " + _tableName);
 					}
 
 					runSQL(
-						connection,
-						"alter table " + _tableName + " add companyId LONG");
+							connection,
+							"alter table " + _tableName + " add companyId LONG");
 				}
 				else {
 					if (_log.isInfoEnabled()) {
 						_log.info(
-							"Skipping the creation of companyId column for " +
-								"table " + _tableName);
+								"Skipping the creation of companyId column for " +
+										"table " + _tableName);
 					}
 				}
 
@@ -134,23 +134,30 @@ public abstract class UpgradeCompanyId extends UpgradeProcess {
 		}
 
 		public void update(Connection connection)
-			throws IOException, SQLException {
+				throws IOException, SQLException {
 
 			for (String[] foreignNames : _foreignNamesArray) {
 				runSQL(
-					connection,
-					getUpdateSQL(connection, foreignNames[0], foreignNames[1]));
+						connection,
+						getUpdateSQL(connection, foreignNames[0], foreignNames[1]));
 			}
 		}
 
 		protected List<Long> getCompanyIds(Connection connection)
-			throws SQLException {
+				throws SQLException {
+
+			return getCompanyIds(connection, "Company");
+		}
+
+		protected List<Long> getCompanyIds(
+				Connection connection, String tableName)
+				throws SQLException {
 
 			List<Long> companyIds = new ArrayList<>();
 
 			try (PreparedStatement ps = connection.prepareStatement(
-					"select companyId from Company");
-				ResultSet rs = ps.executeQuery()) {
+					"select distinct companyId from " + tableName);
+				 ResultSet rs = ps.executeQuery()) {
 
 				while (rs.next()) {
 					long companyId = rs.getLong(1);
@@ -165,9 +172,9 @@ public abstract class UpgradeCompanyId extends UpgradeProcess {
 		protected String getSelectSQL(
 				Connection connection, String foreignTableName,
 				String foreignColumnName)
-			throws SQLException {
+				throws SQLException {
 
-			List<Long> companyIds = getCompanyIds(connection);
+			List<Long> companyIds = getCompanyIds(connection, foreignTableName);
 
 			if (companyIds.size() == 1) {
 				return String.valueOf(companyIds.get(0));
@@ -192,10 +199,10 @@ public abstract class UpgradeCompanyId extends UpgradeProcess {
 		protected String getUpdateSQL(
 				Connection connection, String foreignTableName,
 				String foreignColumnName)
-			throws SQLException {
+				throws SQLException {
 
 			return getUpdateSQL(
-				getSelectSQL(connection, foreignTableName, foreignColumnName));
+					getSelectSQL(connection, foreignTableName, foreignColumnName));
 		}
 
 		protected String getUpdateSQL(String selectSQL) {
@@ -218,6 +225,6 @@ public abstract class UpgradeCompanyId extends UpgradeProcess {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		UpgradeCompanyId.class);
+			UpgradeCompanyId.class);
 
 }

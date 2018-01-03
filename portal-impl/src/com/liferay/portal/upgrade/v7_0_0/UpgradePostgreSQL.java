@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.util.StringBundler;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 import java.util.HashMap;
 import java.util.Map;
 

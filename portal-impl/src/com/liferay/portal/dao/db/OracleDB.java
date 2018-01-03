@@ -224,7 +224,7 @@ public class OracleDB extends BaseDB {
                 size = 4000;
             }
 
-            matcher.appendReplacement(sb, "VARCHAR2(" + size + " CHAR)");
+            matcher.appendReplacement(sb, "VARCHAR2(" + size + "\tCHAR)");
         }
 
         matcher.appendTail(sb);
